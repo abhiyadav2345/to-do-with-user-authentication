@@ -7,15 +7,17 @@ import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useContext, useState } from 'react';
 import { Button, TextField } from '@mui/material';
+import { AuthContext } from '../../providers/auth';
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
 export const LoginPage = () => {
-    const [user, setUser] = useState<User | null>(null);
+    //const [user, setUser] = useState<User | null>(null);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { user, setUser } = useContext(AuthContext);
 
     const setEmailValue = (event: ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -35,7 +37,9 @@ export const LoginPage = () => {
                 const user = result.user;
                 // IdP data available using getAdditionalUserInfo(result)
                 // ...
-                setUser(user);
+                if (user && setUser) {
+                    setUser(user);
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -56,7 +60,9 @@ export const LoginPage = () => {
                 // Signed in
                 const user = userCredential.user;
                 // ...
-                setUser(user);
+                if (user && setUser) {
+                    setUser(user);
+                }
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -70,7 +76,9 @@ export const LoginPage = () => {
                 // Signed in
                 const user = userCredential.user;
                 // ...
-                setUser(user);
+                if (user && setUser) {
+                    setUser(user);
+                }
             })
             .catch((error) => {
                 const errorCode = error.code;

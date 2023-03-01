@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { db } from '../../firebase';
 import {
     collection,
@@ -8,10 +8,13 @@ import {
     getDocs,
     onSnapshot,
     query,
+    where,
 } from 'firebase/firestore';
+import { AuthContext } from '../../providers/auth';
 
 const HomePage = () => {
     const [todos, setTodos] = useState<DocumentData[] | null>(null);
+    const { user } = useContext(AuthContext);
     // Get a list of todos from your database
     // async function getTodos() {
     //     const todosCol = collection(db, 'todos');
@@ -21,7 +24,8 @@ const HomePage = () => {
     //     );
     //     setTodos(todoList);
     // }
-    const q = query(collection(db, 'todos'));
+
+    const q = query(collection(db, 'todos'), where('userId', '==', user?.uid));
 
     useEffect(() => {
         const unsub = onSnapshot(q, (querySnapshot) => {
