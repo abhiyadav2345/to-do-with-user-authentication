@@ -19,8 +19,7 @@ import {
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { AuthContext } from '../../providers/auth';
 import { AddTodo } from '../../add-todo';
-import { CheckIcon, CrossIcon, SunIcon } from '../icons';
-import { Visibility } from '@mui/icons-material';
+import { CheckIcon, CrossIcon } from '../icons';
 
 type HomePageButtonProps = {
     isActive?: boolean;
@@ -38,14 +37,6 @@ const HomePage = () => {
     const [todos, setTodos] = useState<Todo[] | null>(null);
     const { user } = useContext(AuthContext);
     // Get a list of todos from your database
-    // async function getTodos() {
-    //     const todosCol = collection(db, 'todos');
-    //     const todosSnapshot = await getDocs(todosCol);
-    //     const todoList = todosSnapshot.docs.map((doc: { data: () => any }) =>
-    //         doc.data()
-    //     );
-    //     setTodos(todoList);
-    // }
 
     const q = query(collection(db, 'todos'), where('userId', '==', user?.uid));
 
@@ -73,15 +64,6 @@ const HomePage = () => {
             }}
             disablePadding
         >
-            {/* {todo.isCompleted ? (
-                <SunIcon />
-            ) : (
-                <Radio
-                    checked={false}
-                    onChange={() => handleRadioCheck(todo)}
-                    inputProps={{ 'aria-label': todo.title }}
-                />
-            )} */}
             <ListItemButton>
                 {todo.isCompleted ? (
                     <CheckIcon />
