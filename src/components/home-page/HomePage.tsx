@@ -19,7 +19,8 @@ import {
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { AuthContext } from '../../providers/auth';
 import { AddTodo } from '../../add-todo';
-import { CrossIcon } from '../icons';
+import { CheckIcon, CrossIcon, SunIcon } from '../icons';
+import { Visibility } from '@mui/icons-material';
 
 type HomePageButtonProps = {
     isActive?: boolean;
@@ -62,16 +63,50 @@ const HomePage = () => {
         console.log(todo);
     };
     const todoItems = todos?.map((todo: Todo) => (
-        <ListItem sx={{ borderBottom: '1px solid #dfdfdf' }}>
-            <ListItemButton>
+        <ListItem
+            sx={{
+                p: 0,
+                m: 0,
+                borderBottom: '1px solid #dfdfdf',
+                '& .delete-icon': { visibility: 'hidden' },
+                '&:hover .delete-icon': { visibility: 'visible' },
+            }}
+            disablePadding
+        >
+            {/* {todo.isCompleted ? (
+                <SunIcon />
+            ) : (
                 <Radio
-                    checked={todo.isCompleted}
+                    checked={false}
                     onChange={() => handleRadioCheck(todo)}
                     inputProps={{ 'aria-label': todo.title }}
                 />
+            )} */}
+            <ListItemButton>
+                {todo.isCompleted ? (
+                    <CheckIcon />
+                ) : (
+                    <Radio
+                        checked={false}
+                        onChange={() => handleRadioCheck(todo)}
+                        inputProps={{ 'aria-label': todo.title }}
+                    />
+                )}
 
-                <ListItemText>{todo.title}</ListItemText>
-                <IconButton color="primary" aria-label="theme switcher">
+                <ListItemText>
+                    <Grid
+                        container
+                        justifyContent="space-between"
+                        alignItems="center"
+                    >
+                        <span>{todo.title}</span>
+                    </Grid>
+                </ListItemText>
+                <IconButton
+                    className="delete-icon"
+                    color="primary"
+                    aria-label="theme switcher"
+                >
                     <CrossIcon />
                 </IconButton>
             </ListItemButton>

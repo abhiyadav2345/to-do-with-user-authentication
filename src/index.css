@@ -21,4 +21,11 @@ code {
     #root {
         background-image: url(./images/bg-mobile-light.jpg);
     }
+    .dark-theme #root {
+        background-image: url('./images/bg-mobile-dark.jpg');
+    }
+}
+.dark-theme #root {
+    background-image: url('./images/bg-desktop-dark.jpg');
+    background-repeat: no-repeat;
 }
