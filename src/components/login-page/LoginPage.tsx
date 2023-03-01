@@ -3,12 +3,17 @@ import {
     getAuth,
     signInWithPopup,
     GoogleAuthProvider,
-    User,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { ChangeEvent, useContext, useState } from 'react';
-import { Button, TextField } from '@mui/material';
+import {
+    Button,
+    TextField,
+    Card,
+    CardContent,
+    CardActions,
+} from '@mui/material';
 import { AuthContext } from '../../providers/auth';
 
 const provider = new GoogleAuthProvider();
@@ -86,34 +91,40 @@ export const LoginPage = () => {
             });
     };
     return (
-        <div>
-            <TextField
-                id="filled-basic"
-                value={email}
-                onChange={setEmailValue}
-                label="email"
-                variant="filled"
-            />
-            <br />
-            <TextField
-                id="filled-basic"
-                value={password}
-                onChange={setPasswordValue}
-                type="password"
-                label="Password"
-                variant="filled"
-            />
-            <br />
-            <Button color="secondary" variant="text" onClick={signUp}>
-                SignUp
-            </Button>
-            <Button variant="text" onClick={loginInWithEmailAndPassword}>
-                Login
-            </Button>
-            <Button variant="text" onClick={signInWithGoogle}>
-                Login with Google
-            </Button>
-            {user && <h2>{user.displayName}</h2>}
-        </div>
+        <Card>
+            <CardContent>
+                <TextField
+                    id="filled-basic"
+                    value={email}
+                    onChange={setEmailValue}
+                    label="email"
+                    variant="filled"
+                    fullWidth
+                    sx={{ mb: 2 }}
+                />
+
+                <TextField
+                    id="filled-basic"
+                    value={password}
+                    onChange={setPasswordValue}
+                    type="password"
+                    label="Password"
+                    variant="filled"
+                    fullWidth
+                    sx={{ mb: 2 }}
+                />
+            </CardContent>
+            <CardActions>
+                <Button color="secondary" variant="text" onClick={signUp}>
+                    SignUp
+                </Button>
+                <Button variant="text" onClick={loginInWithEmailAndPassword}>
+                    Login
+                </Button>
+                <Button variant="text" onClick={signInWithGoogle}>
+                    Login with Google
+                </Button>
+            </CardActions>
+        </Card>
     );
 };

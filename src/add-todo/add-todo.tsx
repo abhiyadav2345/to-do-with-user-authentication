@@ -1,5 +1,9 @@
 import { Box, Card, CardContent, TextField } from '@mui/material';
-import { AccountCircle, RadioButtonUnchecked } from '@mui/icons-material';
+import {
+    AccountCircle,
+    BorderBottom,
+    RadioButtonUnchecked,
+} from '@mui/icons-material';
 import { useState, KeyboardEvent, useContext } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -23,7 +27,17 @@ const AddTodo = () => {
 
     return (
         <Card>
-            <CardContent>
+            <CardContent
+                sx={{
+                    p: 0,
+                    pl: 3,
+                    '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+                        borderBottom: 'none',
+                    },
+                    '& .MuiInput-underline:after': { borderBottom: 'none' },
+                    '& .MuiInput-underline:before': { borderBottom: 'none' },
+                }}
+            >
                 <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                     <RadioButtonUnchecked
                         sx={{ color: 'action.active', mr: 1, my: 0.5 }}
@@ -33,6 +47,7 @@ const AddTodo = () => {
                         label="Add Todo"
                         variant="standard"
                         onKeyPress={onkeyPress}
+                        fullWidth
                     />
                 </Box>
             </CardContent>
