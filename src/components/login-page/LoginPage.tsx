@@ -4,14 +4,26 @@ import {
     signInWithPopup,
     GoogleAuthProvider,
     User,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
 } from 'firebase/auth';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Button, TextField } from '@mui/material';
 
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
 export const LoginPage = () => {
     const [user, setUser] = useState<User | null>(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const setEmailValue = (event: ChangeEvent<HTMLInputElement>) => {
+        setEmail(event.target.value);
+    };
+    const setPasswordValue = (event: ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
+
     const signInWithGoogle = () => {
         signInWithPopup(auth, provider)
             .then((result) => {
@@ -38,14 +50,58 @@ export const LoginPage = () => {
                 // ...
             });
     };
+    const signUp = () => {
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                // ...
+                setUser(user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // ..
+            });
+    };
+    const loginInWithEmailAndPassword = () => {
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in
+                const user = userCredential.user;
+                // ...
+                setUser(user);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+            });
+    };
     return (
         <div>
-            <TextField id="filled-basic" label="email" variant="filled" />
+            <TextField
+                id="filled-basic"
+                value={email}
+                onChange={setEmailValue}
+                label="email"
+                variant="filled"
+            />
             <br />
-            <TextField id="filled-basic" label="Password" variant="filled" />
+            <TextField
+                id="filled-basic"
+                value={password}
+                onChange={setPasswordValue}
+                type="password"
+                label="Password"
+                variant="filled"
+            />
             <br />
-            <Button variant="text">SignUp</Button>
-            <Button variant="text">Login</Button>
+            <Button variant="text" onClick={signUp}>
+                SignUp
+            </Button>
+            <Button variant="text" onClick={loginInWithEmailAndPassword}>
+                Login
+            </Button>
             <Button variant="text" onClick={signInWithGoogle}>
                 Login with Google
             </Button>
