@@ -104,7 +104,7 @@ export const LoginPage = () => {
                 variant="filled"
             />
             <br />
-            <Button variant="text" onClick={signUp}>
+            <Button color="secondary" variant="text" onClick={signUp}>
                 SignUp
             </Button>
             <Button variant="text" onClick={loginInWithEmailAndPassword}>

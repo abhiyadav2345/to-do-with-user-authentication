@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React, { useContext, useEffect, useState } from 'react';
 import { db } from '../../firebase';
+import { Button, Card, CardActions, CardContent } from '@mui/material';
 import {
     collection,
     doc,
@@ -11,6 +12,7 @@ import {
     where,
 } from 'firebase/firestore';
 import { AuthContext } from '../../providers/auth';
+import { AddTodo } from '../../add-todo';
 
 const HomePage = () => {
     const [todos, setTodos] = useState<DocumentData[] | null>(null);
@@ -44,7 +46,17 @@ const HomePage = () => {
         <span>{todo.title}</span>
     ));
     console.log(todos);
-    return <div>{todoItems}</div>;
+    return (
+        <div>
+            <AddTodo />
+            <Card>
+                <CardContent>{todoItems}</CardContent>
+                <CardActions>
+                    <Button>Filter</Button>
+                </CardActions>
+            </Card>
+        </div>
+    );
 };
 
 export default HomePage;
