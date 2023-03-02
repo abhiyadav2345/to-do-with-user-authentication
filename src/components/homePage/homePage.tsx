@@ -26,6 +26,7 @@ import { Todo } from '../../models/todo';
 import { TodoCard } from '../todo-card';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
+import { Checkbox } from '@mui/material';
 
 type HomePageButtonProps = {
     isActive?: boolean;
@@ -88,9 +89,15 @@ const HomePage = () => {
     const handleRadioCheck = (todo: Todo) => {
         if (todo.id) {
             const docReference = doc(db, 'todos', todo.id);
-            updateDoc(docReference, {
-                isCompleted: true,
-            });
+            if (!todo.isCompleted) {
+                updateDoc(docReference, {
+                    isCompleted: true,
+                });
+            } else {
+                updateDoc(docReference, {
+                    isCompleted: false,
+                });
+            }
         }
     };
 
@@ -133,9 +140,12 @@ const HomePage = () => {
         >
             <ListItemButton>
                 {todo.isCompleted ? (
-                    <CheckIcon />
+                    <Checkbox
+                        checked={true}
+                        onChange={() => handleRadioCheck(todo)}
+                    />
                 ) : (
-                    <Radio
+                    <Checkbox
                         checked={false}
                         onChange={() => handleRadioCheck(todo)}
                         inputProps={{ 'aria-label': todo.title }}

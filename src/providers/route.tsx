@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from '../App';
-import { HomePage } from '../components/home-page/index';
+import { HomePage } from '../components/homePage/index';
 import { LoginPage } from '../components/login-page';
 import { ProtectedRoute } from '../components/protected-route';
 const router = createBrowserRouter([
