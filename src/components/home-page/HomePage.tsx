@@ -1,51 +1,38 @@
-/* eslint-disable prettier/prettier */
-import React, { FC, ReactNode, useContext, useEffect, useState } from 'react';
-import { db } from '../../firebase';
-import { Todo } from '../../models/todo';
-import { TodoCard } from '../todo-card';
-import {
-    Box,
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Grid,
-    IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText,
-    Radio,
-    useMediaQuery,
-} from '@mui/material';
+import React, { FC, useContext, useEffect, useState, ReactNode } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
     collection,
-    onSnapshot,
-    query,
-    where,
-    deleteDoc,
-    doc,
     updateDoc,
+    onSnapshot,
+    doc,
+    deleteDoc,
+    where,
+    query,
 } from 'firebase/firestore';
-import { AuthContext } from '../../providers/auth';
-import { AddTodo } from '../../add-todo';
+import Grid from '@mui/material/Grid';
+import Radio from '@mui/material/Radio';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
 import { CheckIcon, CrossIcon } from '../icons';
+import { db } from '../../firebase';
+import { AuthContext } from '../../providers/auth';
+import { AddTodo } from '../add-todo';
+import { Todo } from '../../models/todo';
+import { TodoCard } from '../todo-card';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 
 type HomePageButtonProps = {
     isActive?: boolean;
     children: ReactNode;
     onClick?: () => void;
 };
-// const HomepageButton: FC<HomePageButtonProps> = (props) => {
-//     const { isActive = false } = props;
-//     return (
-//         <Button sx={{ color: isActive ? 'blue' : 'text.secondary' }} {...props}>
-//             {props.children}
-//         </Button>
-//     );
-// };
-
-const HomepageButton: FC<HomePageButtonProps> = (props) => {
+const HomePageButton: FC<HomePageButtonProps> = (props) => {
     const { isActive = false } = props;
     return (
         <Button
@@ -62,75 +49,87 @@ enum FilterState {
     ACTIVE = 'Active',
     COMPLETED = 'Completed',
 }
+
 const HomePage = () => {
     const [todos, setTodos] = useState<Todo[] | null>(null);
-    const { user } = useContext(AuthContext);
-    const isSmallScreen = useMediaQuery('(max-width:375px)');
     const [activeFilter, setActiveFilter] = useState<FilterState>(
         FilterState.ALL
     );
-    const filteredTodos =
-        activeFilter === FilterState.ALL
-            ? todos
-            : todos?.filter((todo) => {
-                  const filterCondition =
-                      activeFilter === FilterState.ACTIVE ? false : true;
-                  return todo.isCompleted === filterCondition;
-              });
-    // Get a list of todos from your database
-
-    const q = query(collection(db, 'todos'), where('userId', '==', user?.uid));
+    const isSmallScreen = useMediaQuery('(max-width:375px)');
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
-        const unsub = onSnapshot(q, (querySnapshot) => {
-            const todos: Todo[] = [];
-            querySnapshot.forEach((doc) => {
-                const todoItem = {
-                    id: doc.id,
-                    ...doc.data(),
-                };
-                todos.push(todoItem as Todo);
-                setTodos(todos);
-            });
-        });
-        return unsub;
-    }, []);
-    // To Mark Completed
+        if (user) {
+            const q = query(
+                collection(db, 'todos'),
+                where('userId', '==', user?.uid)
+            );
+
+            const subscribeToTodos = () => {
+                return onSnapshot(q, (querySnapshot) => {
+                    const todos: Todo[] = [];
+                    querySnapshot.forEach((doc) => {
+                        const todoItem = {
+                            id: doc.id,
+                            ...doc.data(),
+                        };
+                        todos.push(todoItem as Todo);
+                    });
+                    setTodos(todos);
+                });
+            };
+
+            const unsub = subscribeToTodos();
+
+            return unsub;
+        }
+    }, [user]);
+
     const handleRadioCheck = (todo: Todo) => {
         if (todo.id) {
             const docReference = doc(db, 'todos', todo.id);
-            updateDoc(docReference, { isCompleted: true });
+            updateDoc(docReference, {
+                isCompleted: true,
+            });
         }
     };
 
-    //Filter Active Todo
-
-    const activeTodos = todos?.filter((todo) => !todo.isCompleted ?? []);
-    const completedTodos = todos?.filter((todo) => todo.isCompleted ?? []);
-
-    // Delete todo
     const deleteTodo = (todo: Todo) => {
         if (todo.id) {
             deleteDoc(doc(db, 'todos', todo.id));
         }
     };
 
-    // Clear all Completed Todos
-    const clearCompleted = (todo: Todo) => {
-        completedTodos?.forEach(deleteTodo);
+    const activeTodos = todos?.filter((todo) => !todo.isCompleted) ?? [];
+    const completedTodos = todos?.filter((todo) => todo.isCompleted) ?? [];
+    const filteredTodos =
+        activeFilter === FilterState.ALL
+            ? todos
+            : todos?.filter((todo) => {
+                  const filterCondition =
+                      activeFilter === FilterState.ACTIVE ? false : true;
+
+                  return todo.isCompleted === filterCondition;
+              });
+
+    const clearCompleted = () => {
+        completedTodos.forEach(deleteTodo);
     };
 
-    // Mapping Todo Items
-    const todoItems = todos?.map((todo: Todo) => (
+    const todoItems = filteredTodos?.map((todo: Todo) => (
         <ListItem
+            disablePadding
             sx={{
                 p: 0,
                 m: 0,
                 borderBottom: '1px solid #dfdfdf',
-                '& .delete-icon': { visibility: 'hidden' },
-                '&:hover .delete-icon': { visibility: 'visible' },
+                '& .delete-icon': {
+                    visibility: 'hidden',
+                },
+                '&:hover .delete-icon': {
+                    visibility: 'visible',
+                },
             }}
-            disablePadding
         >
             <ListItemButton>
                 {todo.isCompleted ? (
@@ -149,37 +148,33 @@ const HomePage = () => {
                         justifyContent="space-between"
                         alignItems="center"
                     >
-                        {todo.isCompleted ? (
-                            <span
-                                style={{
-                                    textDecoration: 'line-through',
-                                    textDecorationThickness: '0.1rem',
-                                }}
-                            >
-                                {todo.title}
-                            </span>
-                        ) : (
-                            <span>{todo.title}</span>
-                        )}
+                        <Box
+                            sx={{
+                                textDecoration: todo.isCompleted
+                                    ? 'line-through'
+                                    : 'none',
+                            }}
+                            component="span"
+                        >
+                            {todo.title}
+                        </Box>
+                        <IconButton
+                            className="delete-icon"
+                            onClick={() => deleteTodo(todo)}
+                        >
+                            <CrossIcon />
+                        </IconButton>
                     </Grid>
                 </ListItemText>
-                <IconButton
-                    className="delete-icon"
-                    color="primary"
-                    aria-label="theme switcher"
-                    onClick={() => deleteTodo(todo)}
-                >
-                    <CrossIcon />
-                </IconButton>
             </ListItemButton>
         </ListItem>
     ));
-    console.log(todos);
+
     return (
         <div>
             <AddTodo />
             <TodoCard>
-                <CardContent sx={{ p: 0, m: 0 }}>
+                <CardContent sx={{ p: 0 }}>
                     <List>{todoItems}</List>
                 </CardContent>
                 <CardActions>
@@ -192,72 +187,74 @@ const HomePage = () => {
                             {activeTodos?.length} items left
                         </Box>
                         {!isSmallScreen && (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    backgroundColor: 'primary.main',
-                                }}
-                            >
-                                <HomepageButton
+                            <Box sx={{ display: 'flex' }}>
+                                <HomePageButton
                                     isActive={activeFilter === FilterState.ALL}
-                                    onClick={setActiveFilter(FilterState.ALL)}
+                                    onClick={() =>
+                                        setActiveFilter(FilterState.ALL)
+                                    }
                                 >
                                     All
-                                </HomepageButton>
-                                <HomepageButton
+                                </HomePageButton>
+                                <HomePageButton
                                     isActive={
                                         activeFilter === FilterState.ACTIVE
                                     }
-                                    onClick={setActiveFilter(
-                                        FilterState.ACTIVE
-                                    )}
+                                    onClick={() =>
+                                        setActiveFilter(FilterState.ACTIVE)
+                                    }
                                 >
                                     Active
-                                </HomepageButton>
-                                <HomepageButton
+                                </HomePageButton>
+                                <HomePageButton
                                     isActive={
                                         activeFilter === FilterState.COMPLETED
                                     }
-                                    onClick={setActiveFilter(
-                                        FilterState.COMPLETED
-                                    )}
+                                    onClick={() =>
+                                        setActiveFilter(FilterState.COMPLETED)
+                                    }
                                 >
                                     Completed
-                                </HomepageButton>
+                                </HomePageButton>
                             </Box>
                         )}
                         <Box>
-                            <HomepageButton>{''}Clear Completed</HomepageButton>
+                            <HomePageButton onClick={clearCompleted}>
+                                {' '}
+                                Clear Completed
+                            </HomePageButton>
                         </Box>
                     </Grid>
                 </CardActions>
             </TodoCard>
+
             {isSmallScreen && (
                 <TodoCard>
                     <CardContent>
-                        <HomepageButton
+                        <HomePageButton
                             isActive={activeFilter === FilterState.ALL}
-                            onClick={setActiveFilter(FilterState.ALL)}
+                            onClick={() => setActiveFilter(FilterState.ALL)}
                         >
                             All
-                        </HomepageButton>
-                        <HomepageButton
+                        </HomePageButton>
+                        <HomePageButton
                             isActive={activeFilter === FilterState.ACTIVE}
-                            onClick={setActiveFilter(FilterState.ACTIVE)}
+                            onClick={() => setActiveFilter(FilterState.ACTIVE)}
                         >
                             Active
-                        </HomepageButton>
-                        <HomepageButton
+                        </HomePageButton>
+                        <HomePageButton
                             isActive={activeFilter === FilterState.COMPLETED}
-                            onClick={setActiveFilter(FilterState.COMPLETED)}
+                            onClick={() =>
+                                setActiveFilter(FilterState.COMPLETED)
+                            }
                         >
                             Completed
-                        </HomepageButton>
+                        </HomePageButton>
                     </CardContent>
                 </TodoCard>
             )}
         </div>
     );
 };
-
 export default HomePage;

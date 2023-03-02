@@ -1,10 +1,11 @@
-import { createTheme } from '@mui/material';
-import { green, purple, grey, yellow } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
+import { green, purple, pink } from '@mui/material/colors';
 
 export enum Theme {
     DARK = 'dark',
     LIGHT = 'light',
 }
+
 const lightTheme = createTheme({
     palette: {
         primary: {
@@ -20,10 +21,10 @@ const darkTheme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-            main: yellow[200],
+            main: 'hsl(235, 24%, 19%)',
         },
         secondary: {
-            main: yellow[500],
+            main: pink[500],
         },
     },
 });
