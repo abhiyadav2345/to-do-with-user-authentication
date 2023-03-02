@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { useNavigate, useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import {
     getAuth,
@@ -120,7 +120,7 @@ export const LoginPage = () => {
                 />
             </CardContent>
             <CardActions>
-                <Button color="secondary" variant="text" onClick={signUp}>
+                <Button variant="text" onClick={signUp}>
                     SignUp
                 </Button>
                 <Button variant="text" onClick={loginInWithEmailAndPassword}>
