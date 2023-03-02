@@ -175,9 +175,7 @@ const HomePage = () => {
                             <HomepageButton isActive>All</HomepageButton>
                             <HomepageButton>Active</HomepageButton>
                             <HomepageButton>Completed</HomepageButton>
-                            <HomepageButton onClick={clearCompleted}>
-                                Clear Completed
-                            </HomepageButton>
+                            <HomepageButton>Clear Completed</HomepageButton>
                         </Box>
                         <Box></Box>
                     </Grid>
