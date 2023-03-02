@@ -22,6 +22,7 @@ import { Avatar } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import CloseIcon from '@mui/icons-material/Close';
+import HomeIcon from '@mui/icons-material/Home';
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -216,22 +217,6 @@ export const Appbar = () => {
     );
 
     return (
-        //     <Stack direction="row" spacing={2}>
-        //         <Avatar alt="Avatar" src={photoURL} />
-        //         <Button variant="contained" component="label">
-
-        //             {/* <input
-        //     type="file"
-        //     hidden
-        // style={{ display: 'none' }}
-        // name="upload-photo"/> */}
-        //             <AddAPhotoIcon sx={{ marginRight: 2 }} />
-        //             <button disabled={loading || !photo} onClick={handleClick}>
-        //                 <UploadIcon />
-        //             </button>
-        //         </Button>
-        //     </Stack>
-
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar>

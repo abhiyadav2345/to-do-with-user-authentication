@@ -9,10 +9,7 @@ import { Theme } from '../../theme';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import './header.css';
-//import { ProfileAvatar } from '../user-profile/profileAvatar';
-//import PrimarySearchAppBar from './appbar';
 import { Appbar } from '../user-profile/appbar';
-import { Apartment } from '@mui/icons-material';
 
 const Header = () => {
     const { currentTheme, setTheme } = useContext(AppThemeContext);
@@ -34,14 +31,21 @@ const Header = () => {
 
     return (
         <header>
-            <Appbar />
             <Grid container justifyContent="right">
                 {user ? (
                     <>
-                        <Button onClick={logout}>Logout</Button>
+                        <Grid container>
+                            <Appbar />
+                        </Grid>
+
+                        <Button sx={{ color: 'white' }} onClick={logout}>
+                            Logout
+                        </Button>
                     </>
                 ) : (
-                    <Link to="/login">Login</Link>
+                    <Link to="/login">
+                        <Button sx={{ color: 'white' }}>Login</Button>
+                    </Link>
                 )}
             </Grid>
             <Grid container justifyContent={'space-between'} mt={5} mb={3}>
