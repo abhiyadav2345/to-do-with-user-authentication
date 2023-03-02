@@ -1,9 +1,5 @@
-import { Box, Card, CardContent, TextField } from '@mui/material';
-import {
-    AccountCircle,
-    BorderBottom,
-    RadioButtonUnchecked,
-} from '@mui/icons-material';
+import { Box, CardContent, TextField } from '@mui/material';
+import { RadioButtonUnchecked } from '@mui/icons-material';
 import { useState, KeyboardEvent, useContext } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../../firebase';

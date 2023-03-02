@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
+import { IconButton } from '@mui/material';
 import { MoonIcon, SunIcon } from '../icons';
 import { AppThemeContext } from '../../providers/theme';
 import { AuthContext } from '../../providers/auth';
@@ -9,6 +9,8 @@ import { Theme } from '../../theme';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import './header.css';
+import { ProfileAvatar } from '../user-profile/profileAvatar';
+
 const Header = () => {
     const { currentTheme, setTheme } = useContext(AppThemeContext);
     const { user, signOut } = useContext(AuthContext);
@@ -31,7 +33,10 @@ const Header = () => {
         <header>
             <Grid container justifyContent="right">
                 {user ? (
-                    <Button onClick={logout}>Logout</Button>
+                    <>
+                        <Button onClick={logout}>Logout</Button>
+                        <ProfileAvatar />
+                    </>
                 ) : (
                     <Link to="/login">Login</Link>
                 )}

@@ -99,10 +99,10 @@ export const LoginPage = () => {
         <Card>
             <CardContent>
                 <TextField
-                    id="filled-basic"
+                    id="email-id"
                     value={email}
                     onChange={setEmailValue}
-                    label="email"
+                    label="Email"
                     variant="filled"
                     fullWidth
                     sx={{ mb: 2 }}
