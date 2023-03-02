@@ -1,7 +1,7 @@
 
 # TODO WITH USER AUTH  
 ### This is a simple TODO app built with ReactJS and Firebase. The app allows you to create, read, update, and delete tasks in a Firebase Realtime Database.# Getting Started with Create React App
-## [TODO APP LIVE LINK ](https://todo-list-with-user-auth.web.app/https://link-url-here.org)
+## [TODO APP LIVE LINK ](https://todo-list-with-user-auth.web.app/)
 
 ## DEMO VIDEO
 https://user-images.githubusercontent.com/34111525/222546637-171b1754-b878-4556-8b32-d8a4718e6d52.mp4
