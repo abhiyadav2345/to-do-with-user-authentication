@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+import { useNavigate, useNavigation } from 'react-router-dom';
+
 import {
     getAuth,
     signInWithPopup,
@@ -23,6 +25,7 @@ export const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { user, setUser } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const setEmailValue = (event: ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value);
@@ -44,6 +47,7 @@ export const LoginPage = () => {
                 // ...
                 if (user && setUser) {
                     setUser(user);
+                    navigate('/');
                 }
             })
             .catch((error) => {
@@ -83,6 +87,7 @@ export const LoginPage = () => {
                 // ...
                 if (user && setUser) {
                     setUser(user);
+                    navigate('/');
                 }
             })
             .catch((error) => {
