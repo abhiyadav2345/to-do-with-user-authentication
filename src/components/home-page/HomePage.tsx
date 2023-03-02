@@ -2,6 +2,7 @@
 import React, { FC, ReactNode, useContext, useEffect, useState } from 'react';
 import { db } from '../../firebase';
 import { Todo } from '../../models/todo';
+import { TodoCard } from '../todo-card';
 import {
     Box,
     Button,
@@ -15,6 +16,7 @@ import {
     ListItemButton,
     ListItemText,
     Radio,
+    useMediaQuery,
 } from '@mui/material';
 import {
     collection,
@@ -54,9 +56,27 @@ const HomepageButton: FC<HomePageButtonProps> = (props) => {
         </Button>
     );
 };
+
+enum FilterState {
+    ALL = 'All',
+    ACTIVE = 'Active',
+    COMPLETED = 'Completed',
+}
 const HomePage = () => {
     const [todos, setTodos] = useState<Todo[] | null>(null);
     const { user } = useContext(AuthContext);
+    const isSmallScreen = useMediaQuery('(max-width:375px)');
+    const [activeFilter, setActiveFilter] = useState<FilterState>(
+        FilterState.ALL
+    );
+    const filteredTodos =
+        activeFilter === FilterState.ALL
+            ? todos
+            : todos?.filter((todo) => {
+                  const filterCondition =
+                      activeFilter === FilterState.ACTIVE ? false : true;
+                  return todo.isCompleted === filterCondition;
+              });
     // Get a list of todos from your database
 
     const q = query(collection(db, 'todos'), where('userId', '==', user?.uid));
@@ -158,7 +178,7 @@ const HomePage = () => {
     return (
         <div>
             <AddTodo />
-            <Card sx={{ mt: 2 }}>
+            <TodoCard>
                 <CardContent sx={{ p: 0, m: 0 }}>
                     <List>{todoItems}</List>
                 </CardContent>
@@ -171,16 +191,71 @@ const HomePage = () => {
                         <Box component="span">
                             {activeTodos?.length} items left
                         </Box>
-                        <Box sx={{ display: 'flex' }}>
-                            <HomepageButton isActive>All</HomepageButton>
-                            <HomepageButton>Active</HomepageButton>
-                            <HomepageButton>Completed</HomepageButton>
-                            <HomepageButton>Clear Completed</HomepageButton>
+                        {!isSmallScreen && (
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    backgroundColor: 'primary.main',
+                                }}
+                            >
+                                <HomepageButton
+                                    isActive={activeFilter === FilterState.ALL}
+                                    onClick={setActiveFilter(FilterState.ALL)}
+                                >
+                                    All
+                                </HomepageButton>
+                                <HomepageButton
+                                    isActive={
+                                        activeFilter === FilterState.ACTIVE
+                                    }
+                                    onClick={setActiveFilter(
+                                        FilterState.ACTIVE
+                                    )}
+                                >
+                                    Active
+                                </HomepageButton>
+                                <HomepageButton
+                                    isActive={
+                                        activeFilter === FilterState.COMPLETED
+                                    }
+                                    onClick={setActiveFilter(
+                                        FilterState.COMPLETED
+                                    )}
+                                >
+                                    Completed
+                                </HomepageButton>
+                            </Box>
+                        )}
+                        <Box>
+                            <HomepageButton>{''}Clear Completed</HomepageButton>
                         </Box>
-                        <Box></Box>
                     </Grid>
                 </CardActions>
-            </Card>
+            </TodoCard>
+            {isSmallScreen && (
+                <TodoCard>
+                    <CardContent>
+                        <HomepageButton
+                            isActive={activeFilter === FilterState.ALL}
+                            onClick={setActiveFilter(FilterState.ALL)}
+                        >
+                            All
+                        </HomepageButton>
+                        <HomepageButton
+                            isActive={activeFilter === FilterState.ACTIVE}
+                            onClick={setActiveFilter(FilterState.ACTIVE)}
+                        >
+                            Active
+                        </HomepageButton>
+                        <HomepageButton
+                            isActive={activeFilter === FilterState.COMPLETED}
+                            onClick={setActiveFilter(FilterState.COMPLETED)}
+                        >
+                            Completed
+                        </HomepageButton>
+                    </CardContent>
+                </TodoCard>
+            )}
         </div>
     );
 };

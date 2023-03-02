@@ -6,8 +6,9 @@ import {
 } from '@mui/icons-material';
 import { useState, KeyboardEvent, useContext } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import { AuthContext } from '../providers/auth';
+import { db } from '../../firebase';
+import { AuthContext } from '../../providers/auth';
+import { TodoCard } from '../todo-card';
 
 const AddTodo = () => {
     const [todoText, setTodoText] = useState();
@@ -26,7 +27,7 @@ const AddTodo = () => {
     };
 
     return (
-        <Card>
+        <TodoCard>
             <CardContent
                 sx={{
                     p: 0,
@@ -51,7 +52,7 @@ const AddTodo = () => {
                     />
                 </Box>
             </CardContent>
-        </Card>
+        </TodoCard>
     );
 };
 

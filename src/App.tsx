@@ -1,4 +1,4 @@
-import { Button, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 //import { Outlet } from 'react-router-dom';
@@ -11,7 +11,7 @@ function App() {
             <main>
                 <Outlet />
             </main>
-            <footer>copy:2022</footer>
+            <footer>&copy;2022</footer>
         </Container>
     );
 }
